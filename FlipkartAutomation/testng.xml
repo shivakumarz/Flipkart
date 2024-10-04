@@ -1,0 +1,9 @@
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite name="Flipkart Automation Suite" verbose="1">
+    <test name="Validate Sort Functionality">
+        <classes>
+            <class name="ValidateSortTest"/>
+            <class name="ValidateAddCart"/>
+        </classes>
+    </test>
+</suite>

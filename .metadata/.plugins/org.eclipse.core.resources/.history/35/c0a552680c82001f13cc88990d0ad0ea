@@ -1,0 +1,5 @@
+import TestCases.java;
+
+public class test extends java {
+
+}

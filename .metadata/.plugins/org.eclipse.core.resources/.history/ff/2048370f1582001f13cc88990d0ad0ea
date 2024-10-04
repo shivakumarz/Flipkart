@@ -1,0 +1,75 @@
+
+import base.GlobalActions;
+import page.CommonFunctions;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
+import org.testng.Assert;
+import org.testng.annotations.AfterClass;
+import org.testng.annotations.BeforeClass;
+import org.testng.annotations.Test;
+import utils.Locators;
+
+import java.util.ArrayList;
+import java.util.List;
+
+
+public class ValidateAddCart {
+	
+    private String searchParameter = "shoes"; 
+    private String sortParameter = "Price -- Low to High"; 
+    private String[] expectedProducts = new String[2]; 
+    private double totalSum = 0.0; 
+
+	
+	  WebDriver driver;
+	    GlobalActions globalActions = new GlobalActions();
+	    CommonFunctions commonFunctions = new CommonFunctions();
+
+	    @BeforeClass
+	    public void setUp() {
+	        driver = globalActions.setUp();
+	    }
+
+	    @AfterClass
+	    public void tearDown() {
+	        globalActions.tearDown();
+	    }
+	    
+	    @Test(dataProvider = "productData")
+	    public void validateAddToCart(String searchItem, int pageLimit) throws InterruptedException {
+	        globalActions.navigateToURL(driver);
+
+	        commonFunctions.searchProduct(driver, searchItem);
+	        commonFunctions.sortByLowToHigh(driver);
+	        WebDriverWait wait = new WebDriverWait(driver, 10);
+
+	        List<WebElement> products = wait.until(ExpectedConditions.visibilityOfAllElementsLocatedBy(By.cssSelector(Locators.PRODUCT_LIST)));
+
+	        List<Double> expectedPrices = new ArrayList<>();
+	        int[] productIndices = {1, 2};
+	        
+	        for (int index : productIndices) {
+	            if (products.size() > index) {
+	                // Get the price of the product and add it to the expected prices list
+	                String productPriceText = products.get(index).findElement(By.cssSelector(Locators.PRODUCT_PRICE)).getText();
+	                double productPrice = Double.parseDouble(productPriceText.replace("₹", "").replace(",", "").trim());
+	                expectedPrices.add(productPrice); // Add to the list of expected prices
+	                
+	                // Click the Add to Cart button for the product
+	                products.get(index).findElement(By.xpath(Locators.ADD_TO_CART_BUTTON)).click();
+	                
+	                // Add to the total sum
+	                totalSum += productPrice;
+	            }
+	        }
+
+	        
+
+	      
+	    }
+
+}

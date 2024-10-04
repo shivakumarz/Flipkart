@@ -1,0 +1,31 @@
+package base;
+
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
+import io.github.bonigarcia.wdm.WebDriverManager;
+
+public class GlobalActions {
+    WebDriver driver;
+
+    public WebDriver setUp() {
+        WebDriverManager.chromedriver().setup();
+        ChromeOptions options = new ChromeOptions();
+        options.addArguments("--incognito");
+        options.addArguments("--start-maximized");
+        driver = new ChromeDriver(options);
+        return driver;
+    }
+
+    public void tearDown() {
+        if (driver != null) {
+            driver.quit();
+        }
+    }
+
+    public void login(WebDriver driver) {
+        driver.get("https://www.flipkart.com");
+        driver.findElement(By.cssSelector(Locators.CLOSE_LOGIN_POPUP)).click();  
+    }
+
+}

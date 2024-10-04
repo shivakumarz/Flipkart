@@ -1,0 +1,88 @@
+import base.GlobalActions;
+import page.CommonFunctions;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
+import org.testng.Assert;
+import org.testng.annotations.AfterClass;
+import org.testng.annotations.BeforeClass;
+import org.testng.annotations.DataProvider;
+import org.testng.annotations.Test;
+import utils.Locators;
+
+import java.time.Duration;
+import java.util.ArrayList;
+import java.util.List;
+
+public class ValidateAddCart {
+
+    private String searchParameter = "shoes"; 
+    private double totalSum = 0.0; 
+
+    WebDriver driver;
+    GlobalActions globalActions = new GlobalActions();
+    CommonFunctions commonFunctions = new CommonFunctions();
+
+    @BeforeClass
+    public void setUp() {
+        driver = globalActions.setUp();
+    }
+
+    @AfterClass
+    public void tearDown() {
+        globalActions.tearDown();
+    }
+    
+    @Test(dataProvider = "productData")
+    public void validateAddToCart(String searchItem, int pageLimit) throws InterruptedException {
+        globalActions.navigateToURL(driver);
+
+        commonFunctions.searchProduct(driver, searchItem);
+        commonFunctions.sortByLowToHigh(driver);
+
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        List<WebElement> products = wait.until(ExpectedConditions.visibilityOfAllElementsLocatedBy(By.cssSelector(Locators.PRODUCT_LIST)));
+
+        double expectedTotal = 0.0; // To store expected total price
+
+        // Add second product to cart
+        if (products.size() > 1) {
+            String secondProductPriceText = products.get(1).findElement(By.cssSelector(Locators.PRODUCT_PRICE)).getText();
+            double secondProductPrice = Double.parseDouble(secondProductPriceText.replace("₹", "").replace(",", "").trim());
+            expectedTotal += secondProductPrice; // Add second product price to total
+            products.get(1).findElement(By.xpath(Locators.ADD_TO_CART_BUTTON)).click();
+        }
+
+        // Add third product to cart
+        if (products.size() > 2) {
+            String thirdProductPriceText = products.get(2).findElement(By.xpath(Locators.getProductPrice)).getText();
+            double thirdProductPrice = Double.parseDouble(thirdProductPriceText.replace("₹", "").replace(",", "").trim());
+            expectedTotal += thirdProductPrice; // Add third product price to total
+            products.get(2).findElement(By.xpath(Locators.ADD_TO_CART_BUTTON)).click();
+        }
+
+        // Navigate to the cart
+        driver.findElement(By.xpath(Locators.CART_BUTTON)).click();
+        Thread.sleep(2000); 
+        
+        // Retrieve cart products
+        List<WebElement> cartProducts = driver.findElements(By.cssSelector(Locators.CART_PRODUCTS));
+        Assert.assertEquals(cartProducts.size(), 2, "Number of products in the cart is incorrect!");
+
+        // Validate prices of products in cart
+        for (int i = 0; i < cartProducts.size(); i++) {
+            String cartProductPrice = cartProducts.get(i).findElement(By.cssSelector(Locators.PRODUCT_PRICE)).getText();
+            double cartProductPriceValue = Double.parseDouble(cartProductPrice.replace("₹", "").replace(",", "").trim());
+            Assert.assertEquals(cartProductPriceValue, i == 0 ? secondProductPrice : thirdProductPrice, 
+                                "Product price mismatch for product " + (i + 1));
+        }
+
+        // Validate total sum
+        double cartTotal = calculateCartTotal(cartProducts); // Assuming you still want to use this
+        Assert.assertEquals(cartTotal, expectedTotal, "Total sum mismatch!");
+    }
+
+}

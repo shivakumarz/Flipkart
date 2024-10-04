@@ -1,0 +1,11 @@
+package utils;
+
+public class Locators {
+    public static final String CLOSE_LOGIN_POPUP = "button._2KpZ6l._2doB4z"; // CSS selector for closing login popup
+    public static final String SEARCH_BOX = "//input[@name='q']"; // XPath for search box
+    public static final String SEARCH_BUTTON = "//button[contains(.,'Search Icon')]"; // XPath for search button
+    public static final String SORT_PRICE_LOW_TO_HIGH = "//div[text()='Price -- Low to High']"; // XPath for sorting
+    public static final String PRICE_ELEMENT = "div._30jeq3._1_WHN1"; // CSS selector for product price
+    public static final String NEXT_BUTTON = "//span[normalize-space()='Next']"; // XPath for next button
+}
+

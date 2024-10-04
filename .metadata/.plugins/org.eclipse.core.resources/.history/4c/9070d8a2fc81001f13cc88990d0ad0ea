@@ -1,0 +1,79 @@
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
+import org.testng.Assert;
+import org.testng.annotations.*;
+
+import java.time.Duration;
+import java.util.List;
+import io.github.bonigarcia.wdm.WebDriverManager;
+
+public class Validate_Sort_FunctionalityTest {
+    WebDriver driver;
+
+    @BeforeClass
+    public void setUp() {
+        WebDriverManager.chromedriver().setup();
+        ChromeOptions options = new ChromeOptions();
+        options.addArguments("--incognito");
+        options.addArguments("--start-maximized");
+        driver = new ChromeDriver(options);
+    }
+
+    @AfterClass
+    public void tearDown() {
+        if (driver != null) {
+            driver.quit();
+        }
+    }
+
+    @Test(dataProvider = "productData")
+    public void validateSortPriceLowToHigh(String searchItem, String sortOrder, int pageLimit) throws InterruptedException {
+        driver.get("https://www.flipkart.com");
+
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
+        try {
+            // Wait for the login button to be invisible
+            wait.until(ExpectedConditions.invisibilityOfElementLocated(By.xpath("(//a[@class='_1jKL3b'])[1]")));
+        } catch (Exception e) {
+            System.out.println("Login button still visible: " + e.getMessage());
+        }
+        
+        driver.findElement(By.xpath("//input[@placeholder='Search for Products, Brands and More']")).click();
+        WebElement searchBox = driver.findElement(By.name("q"));
+        searchBox.sendKeys(searchItem);
+        driver.findElement(By.xpath("//button[contains(.,'Search Icon')]")).click();
+        Thread.sleep(2000);
+        JavascriptExecutor js = (JavascriptExecutor) driver;
+    	js.executeScript("window.scrollBy(0, 6000);"); 
+        Thread.sleep(500); 
+        driver.findElement(By.xpath("//div[text()='Price -- Low to High']")).click();
+        for (int i = 1; i <= pageLimit; i++) {
+            List<WebElement> priceElements = driver.findElements(By.cssSelector("div._30jeq3._1_WHN1"));
+            double prevPrice = 0.0;
+            for (WebElement priceElement : priceElements) {
+                double currentPrice = Double.parseDouble(priceElement.getText().replace("₹", "").replace(",", "").trim());
+                Assert.assertTrue(currentPrice >= prevPrice, "Prices are not sorted correctly");
+                prevPrice = currentPrice;
+            }
+            if (i < pageLimit) {
+                JavascriptExecutor jss = (JavascriptExecutor) driver;
+            	jss.executeScript("window.scrollBy(0, 6000);"); 
+                Thread.sleep(500); 
+                driver.findElement(By.xpath("//span[normalize-space()='Next']")).click();
+                Thread.sleep(2000);
+            }
+        }
+    }
+
+    @DataProvider(name = "productData")
+    public Object[][] getProductData() {
+        return new Object[][] {{"shoes", "Price -- Low to High", 2}};
+    }
+}

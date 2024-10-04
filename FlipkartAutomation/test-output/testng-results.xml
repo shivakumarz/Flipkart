@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testng-results ignored="0" total="2" passed="2" failed="0" skipped="0">
+  <reporter-output>
+  </reporter-output>
+  <suite started-at="2024-10-04T13:24:03 IST" name="Flipkart Automation Suite" finished-at="2024-10-04T13:25:06 IST" duration-ms="62486">
+    <groups>
+    </groups>
+    <test started-at="2024-10-04T13:24:03 IST" name="Validate Sort Functionality" finished-at="2024-10-04T13:25:06 IST" duration-ms="62486">
+      <class name="ValidateAddCart">
+        <test-method is-config="true" signature="setUp()[pri:0, instance:ValidateAddCart@5afa3c9]" started-at="2024-10-04T13:24:33 IST" name="setUp" finished-at="2024-10-04T13:24:35 IST" duration-ms="1722" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- setUp -->
+        <test-method signature="validateAddToCart(java.lang.String)[pri:0, instance:ValidateAddCart@5afa3c9]" started-at="2024-10-04T13:24:35 IST" name="validateAddToCart" data-provider="productData" finished-at="2024-10-04T13:25:05 IST" duration-ms="30400" status="PASS">
+          <params>
+            <param index="0">
+              <value>
+                <![CDATA[shoes]]>
+              </value>
+            </param>
+          </params>
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- validateAddToCart -->
+        <test-method is-config="true" signature="tearDown()[pri:0, instance:ValidateAddCart@5afa3c9]" started-at="2024-10-04T13:25:05 IST" name="tearDown" finished-at="2024-10-04T13:25:06 IST" duration-ms="444" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- tearDown -->
+      </class> <!-- ValidateAddCart -->
+      <class name="ValidateSortTest">
+        <test-method is-config="true" signature="setUp()[pri:0, instance:ValidateSortTest@28261e8e]" started-at="2024-10-04T13:24:03 IST" name="setUp" finished-at="2024-10-04T13:24:08 IST" duration-ms="4871" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- setUp -->
+        <test-method signature="validateSortPriceLowToHigh(java.lang.String,int)[pri:0, instance:ValidateSortTest@28261e8e]" started-at="2024-10-04T13:24:08 IST" name="validateSortPriceLowToHigh" data-provider="productData" finished-at="2024-10-04T13:24:33 IST" duration-ms="24646" status="PASS">
+          <params>
+            <param index="0">
+              <value>
+                <![CDATA[shoes]]>
+              </value>
+            </param>
+            <param index="1">
+              <value>
+                <![CDATA[2]]>
+              </value>
+            </param>
+          </params>
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- validateSortPriceLowToHigh -->
+        <test-method is-config="true" signature="tearDown()[pri:0, instance:ValidateSortTest@28261e8e]" started-at="2024-10-04T13:24:33 IST" name="tearDown" finished-at="2024-10-04T13:24:33 IST" duration-ms="284" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- tearDown -->
+      </class> <!-- ValidateSortTest -->
+    </test> <!-- Validate Sort Functionality -->
+  </suite> <!-- Flipkart Automation Suite -->
+</testng-results>
